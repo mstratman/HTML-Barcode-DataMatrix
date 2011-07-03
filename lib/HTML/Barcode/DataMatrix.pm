@@ -1,99 +1,152 @@
 package HTML::Barcode::DataMatrix;
+use Any::Moose;
+extends 'HTML::Barcode::2D';
 
-use 5.006;
-use strict;
-use warnings;
-
-=head1 NAME
-
-HTML::Barcode::DataMatrix - The great new HTML::Barcode::DataMatrix!
-
-=head1 VERSION
-
-Version 0.01
-
-=cut
+use Any::Moose '::Util::TypeConstraints';
+use Barcode::DataMatrix;
 
 our $VERSION = '0.01';
 
+has '+module_size' => ( default => '3px' );
+has 'encoding_mode' => (
+    is       => 'ro',
+    isa      => enum('HTMLBCDM_EncodingMode', qw[ ASCII C40 TEXT BASE256 NONE AUTO ]),
+    required => 1,
+    default  => 'AUTO',
+    documentation => 'The encoding mode for the data matrix. Can be one of: ASCII C40 TEXT BASE256 NONE AUTO',
+);
+has 'process_tilde' => (
+    is       => 'ro',
+    isa      => 'Bool',
+    required => 1,
+    default  => 0,
+    documentation => 'Set to true to indicate the tilde character "~" is being used to recognize special characters.',
+);
+has '_datamatrix' => (
+    is      => 'ro',
+    lazy    => 1,
+    builder => '_build_datamatrix',
+);
+sub _build_datamatrix {
+    my $self = shift;
+    return Barcode::DataMatrix->new(
+        encoding_mode => $self->encoding_mode,
+        process_tilde => $self->process_tilde,
+    );
+}
+
+sub barcode_data {
+    my ($self) = @_;
+    # Its barcode() methods returns an AoA just like we need it.
+    return $self->_datamatrix->barcode($self->text);
+}
+
+=head1 NAME
+
+HTML::Barcode::DataMatrix - Generate HTML representations of Data Matrix barcodes
 
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
+  my $barcode = HTML::Barcode::DataMatrix->new(text => 'http://search.cpan.org');
+  print $code->render;
 
-Perhaps a little code snippet.
+=head1 DESCRIPTION
 
-    use HTML::Barcode::DataMatrix;
+This class allows you easily create HTML representations of Data Matrix
+barcodes.
 
-    my $foo = HTML::Barcode::DataMatrix->new();
-    ...
+=begin html
 
-=head1 EXPORT
+<p>Here is an example of a barcode rendered with this module:</p>
 
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
+=end html
 
-=head1 SUBROUTINES/METHODS
+You can read more about Data Matrix barcodes online
+(e.g. L<http://en.wikipedia.org/wiki/Data_Matrix>)
 
-=head2 function1
+=head1 METHODS
 
-=cut
+=head2 new (%attributes)
 
-sub function1 {
-}
+Instantiate a new HTML::Barcode::DataMatrix object. The C<%attributes> hash
+requires the L</text> attribute, and can take any of the other
+L<attributes|/ATTRIBUTES> listed below.
 
-=head2 function2
+=head2 render
 
-=cut
+This is a convenience routine which returns C<< <style>...</style> >> tags
+and the rendered barcode.
 
-sub function2 {
-}
+If you are printing multiple barcodes or want to ensure your C<style> tags
+are in your HTML headers, then you probably want to output the barcode
+and style separately with L</render_barcode> and
+L</css>.
+
+=head2 render_barcode
+
+Returns only the rendered barcode.  You will need to provide stylesheets
+separately, either writing them yourself or using the output of L</css>.
+
+=head2 css
+
+Returns CSS needed to properly display your rendered barcode.  This is
+only necessary if you are using L</render_barcode> instead of the
+easier L</render> method.
+
+=head1 ATTRIBUTES
+
+These attributes can be passed to L<new|/"new (%attributes)">, or used
+as accessors.
+
+=head2 text
+
+B<Required> - The information to put into the barcode.
+
+=head2 encoding_mode
+
+The encoding mode for the data matrix. Can be one of:
+C<AUTO> (default), C<ASCII>, C<C40>, C<TEXT>, C<BASE256>, or C<NONE>.
+
+=head2 process_tilde
+
+Set to true to indicate the tilde character "~" is being used to recognize
+special characters. See this page for more information:
+L<http://www.idautomation.com/datamatrixfaq.html>
+
+=head2 foreground_color
+
+A CSS color value (e.g. '#000' or 'black') for the foreground. Default is '#000'.
+
+=head2 background_color
+
+A CSS color value background. Default is '#fff'.
+
+=head2 module_size
+
+A CSS value for the width and height of an individual module (a dot) in the
+code. Default is '3px'.
+
+=head2 css_class
+
+The value for the C<class> attribute applied to any container tags
+in the HTML (e.g. C<table> or C<div>).
+C<td> tags within the table will have either css_class_on or css_class_off
+classes applied to them.
+
+For example, if css_class is "barcode", you will get C<< <table class="barcode"> >> and its cells will be either C<< <td class="barcode_on"> >> or
+C<< <td class="barcode_off"> >>.
 
 =head1 AUTHOR
 
-Mark A. Stratman, C<< <stratman at gmail.com> >>
+Mark A. Stratman, C<< <stratman@gmail.com> >>
 
-=head1 BUGS
+=head1 SOURCE REPOSITORY
 
-Please report any bugs or feature requests to C<bug-html-barcode-datamatrix at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=HTML-Barcode-DataMatrix>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
+L<http://github.com/mstratman/HTML-Barcode-DataMatrix>
 
+=head1 SEE ALSO
 
-
-
-=head1 SUPPORT
-
-You can find documentation for this module with the perldoc command.
-
-    perldoc HTML::Barcode::DataMatrix
-
-
-You can also look for information at:
-
-=over 4
-
-=item * RT: CPAN's request tracker (report bugs here)
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=HTML-Barcode-DataMatrix>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/HTML-Barcode-DataMatrix>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/HTML-Barcode-DataMatrix>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/HTML-Barcode-DataMatrix/>
-
-=back
-
-
-=head1 ACKNOWLEDGEMENTS
-
+L<Barcode::DataMatrix>
 
 =head1 LICENSE AND COPYRIGHT
 
@@ -108,4 +161,5 @@ See http://dev.perl.org/licenses/ for more information.
 
 =cut
 
-1; # End of HTML::Barcode::DataMatrix
+no Any::Moose;
+1;
