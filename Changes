@@ -1,5 +1,8 @@
 Revision history for HTML-Barcode-DataMatrix
 
+0.02    Mon Jul  4 01:53:04 CDT 2011
+        - Move author tests to xt to avoid failed tests.
+
 0.01    Sun Jul  3
-        First version, released on an unsuspecting world.
+        - First version, released on an unsuspecting world.
 

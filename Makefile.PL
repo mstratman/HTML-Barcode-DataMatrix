@@ -8,6 +8,7 @@ requires 'Any::Moose'          => '0.15';
 requires 'Barcode::DataMatrix' => '0.01';
 
 tests 't/*.t';
+author_tests 'xt';
 
 test_requires 'Test::More';
 githubmeta;
