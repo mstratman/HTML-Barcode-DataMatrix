@@ -52,7 +52,7 @@ HTML::Barcode::DataMatrix - Generate HTML representations of Data Matrix barcode
 
 =head1 DESCRIPTION
 
-This class allows you easily create HTML representations of Data Matrix
+This class allows you to easily create HTML representations of Data Matrix
 barcodes.
 
 =begin html
