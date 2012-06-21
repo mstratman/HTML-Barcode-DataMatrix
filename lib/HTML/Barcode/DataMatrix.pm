@@ -5,7 +5,7 @@ extends 'HTML::Barcode::2D';
 use Any::Moose '::Util::TypeConstraints';
 use Barcode::DataMatrix;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 has '+module_size' => ( default => '3px' );
 has 'encoding_mode' => (
