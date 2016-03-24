@@ -4,7 +4,7 @@ license 'perl';
 all_from 'lib/HTML/Barcode/DataMatrix.pm';
 
 requires 'HTML::Barcode'       => '0.09';
-requires 'Any::Moose'          => '0.15';
+requires 'Moo';
 requires 'Barcode::DataMatrix' => '0.01';
 
 tests 't/*.t';
