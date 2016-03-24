@@ -1,8 +1,7 @@
 package HTML::Barcode::DataMatrix;
-use Any::Moose;
+use Moo;
 extends 'HTML::Barcode::2D';
 
-use Any::Moose '::Util::TypeConstraints';
 use Barcode::DataMatrix;
 
 our $VERSION = '0.03';
@@ -10,17 +9,14 @@ our $VERSION = '0.03';
 has '+module_size' => ( default => '3px' );
 has 'encoding_mode' => (
     is       => 'ro',
-    isa      => enum('HTMLBCDM_EncodingMode', qw[ ASCII C40 TEXT BASE256 NONE AUTO ]),
-    required => 1,
+    isa      => sub { my $type = shift; for (qw(ASCII C40 TEXT BASE256 NONE AUTO)) { return 1 if $type eq $_ } return 0; },
     default  => 'AUTO',
     documentation => 'The encoding mode for the data matrix. Can be one of: ASCII C40 TEXT BASE256 NONE AUTO',
 );
 has 'process_tilde' => (
     is       => 'ro',
-    isa      => 'Bool',
-    required => 1,
     default  => 0,
-    documentation => 'Set to true to indicate the tilde character "~" is being used to recognize special characters.',
+    documentation => 'Boolean. Set to true to indicate the tilde character "~" is being used to recognize special characters.',
 );
 has '_datamatrix' => (
     is      => 'ro',
@@ -111,7 +107,7 @@ C<AUTO> (default), C<ASCII>, C<C40>, C<TEXT>, C<BASE256>, or C<NONE>.
 
 =head2 process_tilde
 
-Set to true to indicate the tilde character "~" is being used to recognize
+Boolean.  Set to true to indicate the tilde character "~" is being used to recognize
 special characters. See this page for more information:
 L<http://www.idautomation.com/datamatrixfaq.html>
 
@@ -170,5 +166,4 @@ See http://dev.perl.org/licenses/ for more information.
 
 =cut
 
-no Any::Moose;
 1;
