@@ -3,7 +3,7 @@ name 'HTML-Barcode-DataMatrix';
 license 'perl';
 all_from 'lib/HTML/Barcode/DataMatrix.pm';
 
-requires 'HTML::Barcode'       => '0.09';
+requires 'HTML::Barcode'       => '0.13';
 requires 'Moo';
 requires 'Barcode::DataMatrix' => '0.01';
 
