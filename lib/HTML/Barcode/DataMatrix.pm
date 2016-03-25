@@ -4,7 +4,7 @@ extends 'HTML::Barcode::2D';
 
 use Barcode::DataMatrix;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 has '+module_size' => ( default => '3px' );
 has 'encoding_mode' => (

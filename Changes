@@ -1,5 +1,8 @@
 Revision history for HTML-Barcode-DataMatrix
 
+0.05    Fri Mar 25 09:58:25 CDT 2016
+        - Distribution tweaks: Fixed RT #113332 and #108997
+
 0.04    Thu Mar 24 15:19:43 CDT 2016
         - Switched from Any::Moose to Moo
 
